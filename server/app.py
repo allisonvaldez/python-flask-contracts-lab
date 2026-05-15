@@ -46,6 +46,7 @@ def index():
 
     return make_response(response_body, status_code, headers)
 
+
 """
 ROUTE 2: Create the route to display contacts, make sure to display status 200-OK if found and 404 if not. Also provide the route decorator.
 
@@ -54,9 +55,9 @@ Create a function to take the id parameter to look for the contract by id. The c
 @app.route('/contract/<int:id>')
 def contract_info(id):
     """
-    Use the next method to return the first contract match and none if it isn't found
+    Use the next method to return the first contract match and none if it isn't found.
 
-    Use a generator expression to search the contract list for the dictionary id that matches
+    Use a generator expression to search the contract list for the dictionary id that matches.
     """
     contract = next((c for c in contracts if c["id"] == id), None)
     
@@ -71,11 +72,24 @@ def contract_info(id):
 
 
 """
-ROUTE 3: Create the route for the customers do not disclose any data respond with 204.
+ROUTE 3: Create the route for the customers. Make sure to not disclose any data respond with responding witha a 204 if the customer exists and 400 if otherwise. To ensure this do not include anything in the body. Make sure to provide the proper route decorator.
+
+Create a function to take the customer name as a parameter to look for the customer by name. The customer name will be sent in the URL path. Provide redirection and flow for the program if the customer is found or not.
 """
-@app.route('/customer/<str:customer_name>')
-def customer_info():
-  
+@app.route('/customer/<customer_name>')
+def customer_info(customer_name):
+    """
+    Make sure to verify if a customer exists or not, and do not disclose any data in the process. We need to verify if the customer name matches in the lowercase form.
+    """
+    if customer_name.lower() in customers:
+        response_body = ""
+        status_code = 204
+    else:
+        response_body = f"There is no customer found with that {customer_name}, try again."
+        status_code = 404
+    
+    return make_response(response_body, status_code)
+
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
