@@ -63,7 +63,7 @@ def contract_info(id):
     
     # Control flow for the application
     if contract:
-        response_body = f"Contract found: {contract['contract_information']}"
+        response_body = contract['contract_information']
         status_code = 200
     else:
         response_body = f"There is no contract found with that {id}, try again."
@@ -85,7 +85,7 @@ def customer_info(customer_name):
         response_body = ""
         status_code = 204
     else:
-        response_body = contract['contract_information']
+        response_body = f"Customer {customer_name} not found."
         status_code = 404
     
     return make_response(response_body, status_code)
