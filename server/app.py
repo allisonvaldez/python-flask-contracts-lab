@@ -19,22 +19,61 @@ def app_path():
     g.path = os.path.abspath(os.getcwd())
 
 """
-ROUTE 1: Create the index route for the app provide the appropriate decorator. Set up the host, appname, and response body if needed.
+ROUTE 1: Create the homepage index route for the app and provide the appropriate decorator. Set up the host, appname, and response body. Make sure we include the a href to redirect the user to the proper link to access the approproutes needed.
 """
 @app.route('/')
 def index():
+    # Create the host header sent by the client
+    host = request.headers.get("Host")
+
+    # Create a name for Flask to assign to the application
+    appname = current_app.name
+
+    # Create a simple HTML page to display to the user
+    response_body = f"""
+        <h1> The host for this page is {host}</h1>
+        <h2> The name for this application is {appname}</h1>
+        <h3> The path of this application on the user's device is {g.path}</h3>
+        <h3><a href="/contract/1">View Contract 1</a></h3>
+        <h3><a href="/customer/bob">Verify customer: Bob</a></h3>
+    """
+
+    # Set the status code of OK and return data
+    status_code = 200
+
+    # No custom headers needed at this route
+    headers = {}
+
+    return make_response(response_body, status_code, headers)
 
 """
-ROUTE 2: Create the route for the contacts do not disclose any data respond with 204. Also list the route decorator.
+ROUTE 2: Create the route to display contacts, make sure to display status 200-OK if found and 404 if not. Also provide the route decorator.
+
+Create a function to take the id parameter to look for the contract by id. The contract id will be sent in the URL path. Provide redirection and flow for the program if the contract is found or not.
 """
-@app.route('/contract/<id>')
-def contractor_info():
+@app.route('/contract/<int:id>')
+def contract_info(id):
+    """
+    Use the next method to return the first contract match and none if it isn't found
+
+    Use a generator expression to search the contract list for the dictionary id that matches
+    """
+    contract = next((c for c in contracts if c["id"] == id), None)
+    
+    # Control flow for the application
+    if contract:
+        response_body = f"Contract found: {contract['contract_information']}"
+        status_code = 200
+    else:
+        response_body = f"There is no contract found with that {id}, try again."
+        status_code = 404
+    return make_response(response_body, status_code)
 
 
 """
 ROUTE 3: Create the route for the customers do not disclose any data respond with 204.
 """
-@app.route('/customer/<customer_name>')
+@app.route('/customer/<str:customer_name>')
 def customer_info():
   
 
