@@ -85,7 +85,7 @@ def customer_info(customer_name):
         response_body = ""
         status_code = 204
     else:
-        response_body = f"There is no customer found with that {customer_name}, try again."
+        response_body = contract['contract_information']
         status_code = 404
     
     return make_response(response_body, status_code)
